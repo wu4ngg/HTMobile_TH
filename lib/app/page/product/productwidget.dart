@@ -1,9 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:app/app/data/api.dart';
 import 'package:app/app/model/product.dart';
-import 'package:app/app/model/user.dart';
 import 'package:app/app/page/category/categorywidget.dart';
 import 'package:app/app/page/product/product_item.dart';
 import 'package:app/app/provider/category_provider.dart';

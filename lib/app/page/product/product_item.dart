@@ -1,7 +1,10 @@
+import 'package:app/app/model/cart.dart';
 import 'package:app/app/model/product.dart';
 import 'package:app/app/page/product/product_info.dart';
+import 'package:app/app/provider/product_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ProductItem extends StatelessWidget {
   const ProductItem({super.key, required this.model});
@@ -59,13 +62,19 @@ class ProductItem extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: FilledButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.shopping_cart_outlined,
-                            size: 16,
-                          ),
-                          label: Text("Thêm vào giỏ"),
+                        child: Consumer<CartProvider>(
+                          builder: (context, value, child) {
+                            return FilledButton.icon(
+                              onPressed: () {
+                                value.addToCart(CartModel.fromProduct(model));
+                              },
+                              icon: const Icon(
+                                Icons.shopping_cart_outlined,
+                                size: 16,
+                              ),
+                              label: Text("Thêm vào giỏ"),
+                            );
+                          }
                         ),
                       ),
                     ],

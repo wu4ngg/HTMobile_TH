@@ -70,7 +70,6 @@ class APIRepository {
       }
       return lst;
     } catch (e) {
-      log(e.toString() , error: e);
       return [];
     }
   }
@@ -121,7 +120,16 @@ class APIRepository {
       rethrow;
     }
   }
-
+  Future<bool> forgetPassword(String accountID, String numberID, String newPass) async{
+    try{
+      final body = FormData.fromMap({'accountID': accountID, 'numberID': numberID, 'newPass': newPass});
+      Response res = await api.sendRequest.put('/Auth/forgetPass', data: body);
+      return res.statusCode == 200;
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
   Future<User> current(String token) async {
     try {
       Response res = await api.sendRequest

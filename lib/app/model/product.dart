@@ -16,6 +16,7 @@ class ProductModel {
       required this.price});
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
+        id: (json['id'] ?? -1).toString(),
         name: json['name'] ?? '',
         description: json['description'] ?? '',
         imageURL: json['imageURL'] ?? '',
@@ -25,6 +26,7 @@ class ProductModel {
   }
   Map<String, dynamic> toMap(){
     return {
+      'id': id,
       'name': name,
       'description': description,
       'imageURL': imageURL,

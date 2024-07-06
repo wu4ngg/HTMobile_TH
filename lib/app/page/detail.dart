@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
-
+import 'package:app/app/page/auth/change_password.dart';
 import 'package:flutter/material.dart';
 import '../model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,12 +33,6 @@ class _DetailState extends State<Detail> {
 
   @override
   Widget build(BuildContext context) {
-    // create style
-    TextStyle mystyle = const TextStyle(
-      fontSize: 24,
-      fontWeight: FontWeight.bold,
-      color: Colors.amber,
-    );
     return Scaffold(
         body: FutureBuilder(
             future: future,
@@ -151,7 +144,9 @@ class _DetailState extends State<Detail> {
                           trailing: const Icon(Icons.arrow_right),
                         ),
                         ListTile(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (c) => ChangePasswordScreen()));
+                          },
                           leading: const Icon(Icons.lock_outline),
                           title: const Text("Đổi mật khẩu"),
                           trailing: const Icon(Icons.arrow_right),
@@ -160,6 +155,12 @@ class _DetailState extends State<Detail> {
                           onTap: () {},
                           leading: const Icon(Icons.favorite_border),
                           title: const Text("Danh sách yêu thích"),
+                          trailing: const Icon(Icons.arrow_right),
+                        ),
+                        ListTile(
+                          onTap: () {},
+                          leading: const Icon(Icons.admin_panel_settings_outlined),
+                          title: const Text("Trang admin"),
                           trailing: const Icon(Icons.arrow_right),
                         ),
                         const Divider(),

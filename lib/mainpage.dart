@@ -9,6 +9,7 @@ import 'package:app/app/page/detail.dart';
 import 'package:app/app/page/product/productwidget.dart';
 import 'package:app/app/page/purchase_history.dart';
 import 'package:app/app/provider/category_provider.dart';
+import 'package:app/app/provider/product_providers.dart';
 import 'package:app/app/provider/token_manager.dart';
 import 'package:app/app/route/page1.dart';
 import 'package:app/app/route/page2.dart';
@@ -42,7 +43,6 @@ class _MainpageState extends State<Mainpage> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String strUser = pref.getString('user')!;
     user = User.fromJson(await jsonDecode(strUser));
-    log(user.idNumber ?? "null");
     token = await TokenManager.getToken();
   }
 
@@ -146,7 +146,8 @@ class _MainpageState extends State<Mainpage> {
                       setState(() {
                         _selectedIndex = 0;
                       });
-                      prov.currentIndex = prov.lst.indexWhere((e2) => e2.id == e.id);
+                      prov.currentIndex =
+                          prov.lst.indexWhere((e2) => e2.id == e.id);
                     },
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(e.imageURL!),
@@ -179,22 +180,38 @@ class _MainpageState extends State<Mainpage> {
         );
       }),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Trang chủ',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.history),
-            label: 'History',
+            label: 'Lịch sử mua hàng',
           ),
           BottomNavigationBarItem(
-            icon: Badge(label: Text("0"), child: Icon(Icons.shop)),
-            label: 'Cart',
+            icon: Consumer<CartProvider>(builder: (context, value, child) {
+              return Badge(
+                  label: FutureBuilder(
+                      future: value.count,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return Text((snapshot.data ?? 0).toString());
+                      }),
+                  child: Icon(Icons.shop));
+            }),
+            label: 'Giỏ hàng',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'User',
+            label: 'T. Tin người dùng',
           ),
         ],
         currentIndex: _selectedIndex,
