@@ -30,7 +30,7 @@ class DatabaseHelper{
   }
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(
-      'CREATE TABLE cart(id INTEGER PRIMARY KEY, quantity integer, name nvarchar(2000), description nvarchar(2000), imageURL nvarchar(3000), categoryID integer, categoryName nvarchar(2000), price integer);'
+      'CREATE TABLE cart(id INTEGER PRIMARY KEY, productId integer, quantity integer, name nvarchar(2000), description nvarchar(2000), imageURL nvarchar(3000), categoryID integer, categoryName nvarchar(2000), price integer);'
     );
   }
   Future<List<CartModel>> getCart() async {

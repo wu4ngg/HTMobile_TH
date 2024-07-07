@@ -59,11 +59,14 @@ class APIRepository {
       rethrow;
     }
   }
-  Future<List<ProductModel>> getProductsByCateid(String accountID, int id, String token) async{
+
+  Future<List<ProductModel>> getProductsByCateid(
+      String accountID, int id, String token) async {
     try {
       List<ProductModel> lst = [];
       Response res = await api.sendRequest.get('/Product/getListByCatId',
-          options: Options(headers: header(token)), queryParameters: {"accountID": accountID, "categoryID": id});
+          options: Options(headers: header(token)),
+          queryParameters: {"accountID": accountID, "categoryID": id});
       var data = res.data;
       for (var element in data) {
         lst.add(ProductModel.fromJson(element));
@@ -73,12 +76,14 @@ class APIRepository {
       return [];
     }
   }
+
   Future<List<CategoryModel>> getListCategory(
       String accountID, String token) async {
     try {
       List<CategoryModel> lst = [];
       Response res = await api.sendRequest.get('/Category/getList',
-          options: Options(headers: header(token)), queryParameters: {"accountID": accountID});
+          options: Options(headers: header(token)),
+          queryParameters: {"accountID": accountID});
       var data = res.data;
       for (var element in data) {
         lst.add(CategoryModel.fromJson(jsonEncode(element)));
@@ -88,10 +93,14 @@ class APIRepository {
       rethrow;
     }
   }
-  Future<List<ProductModel>> getListProduct(String accountID, String token) async {
-    try{
+
+  Future<List<ProductModel>> getListProduct(
+      String accountID, String token) async {
+    try {
       List<ProductModel> tmp = [];
-      Response res = await api.sendRequest.get('/Product/getList', options: Options(headers: header(token)), queryParameters: {"accountID": accountID});
+      Response res = await api.sendRequest.get('/Product/getList',
+          options: Options(headers: header(token)),
+          queryParameters: {"accountID": accountID});
       var data = res.data;
       for (var element in data) {
         tmp.add(ProductModel.fromJson(element));
@@ -120,9 +129,12 @@ class APIRepository {
       rethrow;
     }
   }
-  Future<bool> forgetPassword(String accountID, String numberID, String newPass) async{
-    try{
-      final body = FormData.fromMap({'accountID': accountID, 'numberID': numberID, 'newPass': newPass});
+
+  Future<bool> forgetPassword(
+      String accountID, String numberID, String newPass) async {
+    try {
+      final body = FormData.fromMap(
+          {'accountID': accountID, 'numberID': numberID, 'newPass': newPass});
       Response res = await api.sendRequest.put('/Auth/forgetPass', data: body);
       return res.statusCode == 200;
     } catch (e) {
@@ -130,12 +142,25 @@ class APIRepository {
       rethrow;
     }
   }
+
   Future<User> current(String token) async {
     try {
       Response res = await api.sendRequest
           .get('/Auth/current', options: Options(headers: header(token)));
       return User.fromJson(res.data);
     } catch (ex) {
+      rethrow;
+    }
+  }
+
+  Future<bool> uploadProduct(ProductModel prod, String token) async {
+    try {
+      final body = FormData.fromMap(prod.toMap());
+      Response res = await api.sendRequest.post('/addProduct',
+          data: body, options: Options(headers: header(token)));
+      return res.statusCode == 200;
+    } catch (ex) {
+      log(ex.toString());
       rethrow;
     }
   }

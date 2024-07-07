@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app/app/page/admin/admin.dart';
 import 'package:app/app/page/auth/change_password.dart';
 import 'package:flutter/material.dart';
 import '../model/user.dart';
@@ -104,7 +105,6 @@ class _DetailState extends State<Detail> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        
                         ListTile(
                           leading: const Icon(Icons.tag),
                           title: Text(user.idNumber ?? "null"),
@@ -131,7 +131,6 @@ class _DetailState extends State<Detail> {
                           title: const Text("Khoá"),
                           subtitle: Text(user.schoolKey!),
                         ),
-                        
                         const Divider(),
                         const Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -145,7 +144,10 @@ class _DetailState extends State<Detail> {
                         ),
                         ListTile(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (c) => ChangePasswordScreen()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (c) => ChangePasswordScreen()));
                           },
                           leading: const Icon(Icons.lock_outline),
                           title: const Text("Đổi mật khẩu"),
@@ -158,8 +160,14 @@ class _DetailState extends State<Detail> {
                           trailing: const Icon(Icons.arrow_right),
                         ),
                         ListTile(
-                          onTap: () {},
-                          leading: const Icon(Icons.admin_panel_settings_outlined),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (c) => const AdminPage()));
+                          },
+                          leading:
+                              const Icon(Icons.admin_panel_settings_outlined),
                           title: const Text("Trang admin"),
                           trailing: const Icon(Icons.arrow_right),
                         ),

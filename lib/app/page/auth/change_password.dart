@@ -3,11 +3,12 @@ import 'dart:developer';
 import 'package:app/app/data/api.dart';
 import 'package:app/app/data/sharepre.dart';
 import 'package:app/app/model/user.dart';
+import 'package:app/app/provider/token_manager.dart';
 import 'package:flutter/material.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
-  const ChangePasswordScreen({super.key});
-
+  const ChangePasswordScreen({super.key, this.forgetPassword = false});
+  final bool forgetPassword;
   @override
   State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
@@ -16,19 +17,28 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   TextEditingController oldPasswordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController rePasswordController = TextEditingController();
-  bool forgetPasswordMode = false;
+  bool isOldPasswordValid = true;
+  bool isRePasswordValie = true;
+  late bool forgetPasswordMode = widget.forgetPassword;
   final APIRepository repo = APIRepository();
-  changePassword() async {
-
-  }
+  changePassword() async {}
   forgetPassword(BuildContext context) async {
     User user = await getUser();
     log(user.toJson().toString());
-    await repo.forgetPassword(user.accountId!, user.idNumber ?? user.accountId!, newPasswordController.text);
-    if(context.mounted){
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Thay đổi mật khẩu thành công!")));
+    await repo.forgetPassword(user.accountId!, user.idNumber ?? user.accountId!,
+        newPasswordController.text);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Thay đổi mật khẩu thành công!")));
     }
   }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +53,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               enabled: !forgetPasswordMode,
               obscureText: true,
               controller: oldPasswordController,
-              decoration: const InputDecoration(label: Text("Mật khẩu cũ")),
+              decoration: const InputDecoration(
+                label: Text("Mật khẩu cũ")
+              ),
             ),
             TextField(
               obscureText: true,
@@ -64,21 +76,30 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 Expanded(
                   child: FilledButton(
                       onPressed: () {
-                        if(forgetPasswordMode){
+                        if (forgetPasswordMode) {
                           forgetPassword(context);
                         } else {
                           changePassword();
                         }
-                      }, child: const Text("Hoàn thành")),
+                      },
+                      child: const Text("Hoàn thành")),
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Expanded(
                     child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          String token = await TokenManager.getToken();
+                          if (forgetPasswordMode && token == "") {
+                            Navigator.pop(context);
+                          }
                           setState(() {
                             forgetPasswordMode = !forgetPasswordMode;
                           });
-                        }, child: Text(!forgetPasswordMode ? "Quên mật khẩu" : "Huỷ"))),
+                        },
+                        child: Text(
+                            !forgetPasswordMode ? "Quên mật khẩu" : "Huỷ"))),
               ],
             )
           ],

@@ -17,7 +17,6 @@ class CartItem extends StatelessWidget {
   final bool? selected;
   @override
   Widget build(BuildContext context) {
-    log("in widget: ${selected}");
     return Card.filled(
       child: Padding(
         padding: const EdgeInsets.all(10.0),

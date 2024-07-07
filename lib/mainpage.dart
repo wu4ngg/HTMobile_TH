@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:app/app/data/api.dart';
 import 'package:app/app/model/category.dart';
 import 'package:app/app/model/user.dart';
+import 'package:app/app/page/admin/admin.dart';
 import 'package:app/app/page/cart.dart';
 import 'package:app/app/page/category/categorywidget.dart';
 import 'package:app/app/page/detail.dart';
@@ -158,7 +159,9 @@ class _MainpageState extends State<Mainpage> {
               ListTile(
                 leading: const Icon(Icons.admin_panel_settings_outlined),
                 title: const Text('Trang Admin'),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (c) => const AdminPage()));
+                },
               ),
               const Divider(),
               ListTile(

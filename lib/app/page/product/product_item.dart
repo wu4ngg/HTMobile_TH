@@ -21,15 +21,18 @@ class ProductItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(
-              model.imageURL,
-              loadingBuilder: (context, child, loadingProgress) =>
-                  loadingProgress != null
-                      ? const Expanded(
-                          child: Center(child: CircularProgressIndicator()))
-                      : child,
-              height: 128,
-              fit: BoxFit.cover,
+            Hero(
+              tag: 0,
+              child: Image.network(
+                model.imageURL,
+                loadingBuilder: (context, child, loadingProgress) =>
+                    loadingProgress != null
+                        ? const Expanded(
+                            child: Center(child: CircularProgressIndicator()))
+                        : child,
+                height: 128,
+                fit: BoxFit.cover,
+              ),
             ),
             const SizedBox(
               height: 10,

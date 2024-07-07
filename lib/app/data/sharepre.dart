@@ -24,6 +24,7 @@ Future<bool> logOut(BuildContext context) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('user', '');
+    prefs.setString('jwt_token', '');
     print("Logout thành công");
     Navigator.pushAndRemoveUntil(
         context,
