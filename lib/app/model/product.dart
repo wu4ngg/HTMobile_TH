@@ -6,6 +6,7 @@ class ProductModel {
   int price;
   int categoryID;
   String categoryName;
+  int? idFav;
   ProductModel(
       {this.id,
       required this.name,
@@ -36,5 +37,5 @@ class ProductModel {
     };
   }
   @override
-  String toString() => "$name $description $imageURL $categoryID $categoryName $price";
+  String toString() => "$id $name $description $imageURL $categoryID $categoryName $price";
 }

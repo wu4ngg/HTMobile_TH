@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:app/app/model/product.dart';
+import 'package:app/app/model/purchase.dart';
 import 'package:app/app/model/register.dart';
 import 'package:app/app/model/user.dart';
 import 'package:app/app/page/category/categorywidget.dart';
+import 'package:app/app/page/purchase_history.dart';
 import 'package:dio/dio.dart';
 
 class API {
@@ -130,6 +132,46 @@ class APIRepository {
     }
   }
 
+  Future<bool> uploadCate(
+      CategoryModel cate, String token, String accountID) async {
+    try {
+      final body = FormData.fromMap({...cate.toMap(), 'accountID': accountID});
+      Response res = await api.sendRequest.post('/addCategory',
+          data: body, options: Options(headers: header(token)));
+      return res.statusCode == 200;
+    } catch (ex) {
+      log(ex.toString());
+      rethrow;
+    }
+  }
+
+  Future<bool> removeCate(
+      int categoryid, String accountID, String token) async {
+    try {
+      final body =
+          FormData.fromMap({'categoryID': categoryid, 'accountID': accountID});
+      Response res = await api.sendRequest.delete('/removeCategory',
+          data: body, options: Options(headers: header(token)));
+      return res.statusCode == 200;
+    } catch (ex) {
+      log(ex.toString());
+      rethrow;
+    }
+  }
+
+  Future<bool> editCate(
+      String accountID, String token, CategoryModel cate) async {
+    try {
+      final body = FormData.fromMap({'accountID': accountID, ...cate.toMap()});
+      Response res = await api.sendRequest.put('/updateCategory',
+          data: body, options: Options(headers: header(token)));
+      return res.statusCode == 200;
+    } catch (ex) {
+      log(ex.toString());
+      rethrow;
+    }
+  }
+
   Future<bool> forgetPassword(
       String accountID, String numberID, String newPass) async {
     try {
@@ -159,6 +201,61 @@ class APIRepository {
       Response res = await api.sendRequest.post('/addProduct',
           data: body, options: Options(headers: header(token)));
       return res.statusCode == 200;
+    } catch (ex) {
+      log(ex.toString());
+      rethrow;
+    }
+  }
+
+  Future<bool> removeProduct(
+      int productId, String accountID, String token) async {
+    try {
+      final body =
+          FormData.fromMap({'productID': productId, 'accountID': accountID});
+      Response res = await api.sendRequest.delete('/removeProduct',
+          data: body, options: Options(headers: header(token)));
+      return res.statusCode == 200;
+    } catch (ex) {
+      log(ex.toString());
+      rethrow;
+    }
+  }
+
+  Future<bool> purchase(
+      List<Map<String, dynamic>> lstProduct, String token) async {
+    try {
+      log(lstProduct.toString());
+      Response res = await api.sendRequest.post("/Order/addBill",
+          data: lstProduct, options: Options(headers: header(token)));
+      return res.statusCode == 200;
+    } catch (ex) {
+      log(ex.toString());
+      rethrow;
+    }
+  }
+
+  Future<bool> editProduct(
+      String accountID, String token, ProductModel prod) async {
+    try {
+      final body = FormData.fromMap({'accountID': accountID, ...prod.toMap()});
+      Response res = await api.sendRequest.put('/updateProduct',
+          data: body, options: Options(headers: header(token)));
+      return res.statusCode == 200;
+    } catch (ex) {
+      log(ex.toString());
+      rethrow;
+    }
+  }
+
+  Future<List<PurchaseHistoryModel>> getPurchaseHistory(String token) async {
+    List<PurchaseHistoryModel> lst = [];
+    try {
+      Response res = await api.sendRequest
+          .get('/Bill/getHistory', options: Options(headers: header(token)));
+      for (var element in res.data) {
+        lst.add(PurchaseHistoryModel.fromJson(element));
+      }
+      return lst;
     } catch (ex) {
       log(ex.toString());
       rethrow;

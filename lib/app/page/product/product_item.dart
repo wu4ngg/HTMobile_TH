@@ -15,24 +15,39 @@ class ProductItem extends StatelessWidget {
     return Card.filled(
       child: InkWell(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder:(context) => ProductInfoPage(model: model),));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductInfoPage(model: model),
+              ));
         },
         borderRadius: const BorderRadius.all(Radius.circular(14)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Hero(
-              tag: 0,
-              child: Image.network(
-                model.imageURL,
-                loadingBuilder: (context, child, loadingProgress) =>
-                    loadingProgress != null
-                        ? const Expanded(
-                            child: Center(child: CircularProgressIndicator()))
-                        : child,
-                height: 128,
-                fit: BoxFit.cover,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12)),
+                    child: Material(
+                      color: Colors.white,
+                      child: Image.network(
+                        model.imageURL,
+                        loadingBuilder: (context, child, loadingProgress) =>
+                            loadingProgress != null
+                                ? const Center(
+                                    child: CircularProgressIndicator())
+                                : child,
+                        height: 128,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 10,
@@ -66,19 +81,34 @@ class ProductItem extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Consumer<CartProvider>(
-                          builder: (context, value, child) {
-                            return FilledButton.icon(
-                              onPressed: () {
-                                value.addToCart(CartModel.fromProduct(model));
-                              },
-                              icon: const Icon(
-                                Icons.shopping_cart_outlined,
-                                size: 16,
-                              ),
-                              label: Text("Thêm vào giỏ"),
-                            );
-                          }
-                        ),
+                            builder: (context, value, child) {
+                          return FilledButton(
+                            onPressed: () {
+                              value.addToCart(CartModel.fromProduct(model));
+                            },
+                            child: const Icon(
+                              Icons.shopping_cart_outlined,
+                            ),
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Consumer<FavoriteProvider>(
+                        builder: (context, value, child) {
+                          return Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () async {
+                                    if(value.isInList(model)){
+                                      await value.removeFromFav(int.parse(model.id!));
+                                      return;
+                                    }
+                                    value.addToFav(model);
+                                  },
+                                  child: Icon(value.isInList(model) ? Icons.favorite : Icons.favorite_border)));
+                        }
                       ),
                     ],
                   )

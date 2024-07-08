@@ -152,7 +152,7 @@ class _ProductPageState extends State<ProductPage> {
                           itemCount: prods.length,
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: .55, crossAxisCount: 2),
+                                  childAspectRatio: .45, crossAxisCount: 2),
                           itemBuilder: (context, index) =>
                               ProductItem(model: prods[index]),
                         )

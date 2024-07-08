@@ -62,7 +62,7 @@ class CartItem extends StatelessWidget {
                             )),
                           ],
                         ),
-                        Text(NumberFormat().format(model.price))
+                        Text("${NumberFormat().format(model.price)} đồng")
                       ],
                     ),
                   ),

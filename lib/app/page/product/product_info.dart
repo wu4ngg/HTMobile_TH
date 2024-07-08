@@ -1,6 +1,9 @@
+import 'package:app/app/model/cart.dart';
 import 'package:app/app/model/product.dart';
+import 'package:app/app/provider/product_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ProductInfoPage extends StatefulWidget {
   const ProductInfoPage({super.key, required this.model});
@@ -48,18 +51,28 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                   ),
                   Row(
                     children: [
-                      Expanded(
-                          child: FilledButton(
-                              onPressed: () {}, child: const Text("Mua ngay"))),
+                      Consumer<CartProvider>(builder: (context, value, child) {
+                        return Expanded(
+                            child: FilledButton.icon(
+                          onPressed: () async {
+                            await value
+                                .addToCart(CartModel.fromProduct(widget.model));
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Đã thêm vào giỏ hàng.")));
+                            }
+                          },
+                          label: const Text("Thêm vào giỏ"),
+                          icon: const Icon(Icons.shopping_cart_outlined),
+                        ));
+                      }),
                       const SizedBox(
                         width: 10,
                       ),
                       Expanded(
                           child: ElevatedButton.icon(
-                        onPressed: () {},
-                        label: const Text("Thêm vào giỏ"),
-                        icon: const Icon(Icons.shopping_cart_outlined),
-                      ))
+                              onPressed: () {}, icon: Icon(Icons.favorite_border), label: const Text("Yêu thích"))),
                     ],
                   ),
                   const SizedBox(

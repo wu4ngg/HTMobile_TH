@@ -1,7 +1,30 @@
+
+import 'dart:developer';
+
 import 'package:app/app/model/cart.dart';
+import 'package:app/app/model/product.dart';
 import 'package:app/app/sqlite/helper.dart';
 import 'package:flutter/material.dart';
-
+class FavoriteProvider extends ChangeNotifier {
+  List<ProductModel> _list = [];
+  DatabaseHelper helper = DatabaseHelper();
+  bool isInList(ProductModel model) {
+    return _list.any((e) => e.id == model.id);
+  }
+  List<ProductModel> get list => _list;
+  updateFav() async {
+    _list = await helper.getFav();
+    notifyListeners();
+  }
+  Future<void> addToFav(ProductModel product) async {
+    await helper.addToFav(product);
+    await updateFav();
+  }
+  Future<void> removeFromFav(int id) async {
+    await helper.removeFromFav(id);
+    await updateFav();
+  }
+}
 class CartProvider extends ChangeNotifier{
   List<CartModel> _cart = [];
 
@@ -56,9 +79,6 @@ class CartProvider extends ChangeNotifier{
     await helper.clearCart();
     _cart.clear();
     notifyListeners();
-  }
-  void purchase(CartModel prod) async {
-    //TODO: tính năng mua
   }
   void purchaseAll() async {
     

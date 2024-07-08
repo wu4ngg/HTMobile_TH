@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:app/app/data/api.dart';
 import 'package:app/app/model/cart.dart';
 import 'package:app/app/page/cart/cart_item.dart';
 import 'package:app/app/provider/product_providers.dart';
+import 'package:app/app/provider/token_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +21,24 @@ class _CartPageState extends State<CartPage> {
   List<CartModel> lst = [];
   List<CartModel> selectList = [];
   Future<void>? future;
+  APIRepository repo = APIRepository();
   void revalidateCart(CartProvider provider) {
     future = provider.revalidateCart(false);
+  }
+
+  buyProducts(CartProvider value) async {
+    bool valid = await repo.purchase(
+        selectList
+            .map((e) => {"productID": e.productId, "count": e.quantity})
+            .toList(),
+        await TokenManager.getToken());
+    if (valid) {
+      for (var element in selectList) {
+        await value.removeFromCart(element);
+        await value.revalidateCart(false);
+      }
+      setState(() {});
+    } else {}
   }
 
   int sumProduct() {
@@ -58,13 +76,18 @@ class _CartPageState extends State<CartPage> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.remove_shopping_cart_outlined, size: 36,),
+                          Icon(
+                            Icons.remove_shopping_cart_outlined,
+                            size: 36,
+                          ),
                           Text(
                             "Không có sản phẩm!",
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                           const Text(
-                              "Hãy bắt đầu mua hàng bằng cách ấn nút 'Thêm vào giỏ' ở sản phẩm.", textAlign: TextAlign.center,)
+                            "Hãy bắt đầu mua hàng bằng cách ấn nút 'Thêm vào giỏ' ở sản phẩm.",
+                            textAlign: TextAlign.center,
+                          )
                         ],
                       ),
                     ),
@@ -86,7 +109,7 @@ class _CartPageState extends State<CartPage> {
                               }
                             });
                           },
-                          onDelete: () async {                            
+                          onDelete: () async {
                             if (selectList.isNotEmpty) {
                               selectList
                                   .removeWhere((e) => e.id == lst[index].id);
@@ -130,9 +153,15 @@ class _CartPageState extends State<CartPage> {
                           },
                           icon: const Icon(Icons.delete_forever_outlined));
                     }),
-                    FilledButton(
-                        onPressed: selectList.isEmpty ? null : () {},
-                        child: const Text("Mua")),
+                    Consumer<CartProvider>(builder: (context, value, child) {
+                      return FilledButton(
+                          onPressed: selectList.isEmpty
+                              ? null
+                              : () {
+                                  buyProducts(value);
+                                },
+                          child: const Text("Mua"));
+                    }),
                     Consumer<CartProvider>(builder: (context, value, child) {
                       return Checkbox(
                           value: selectList.length == lst.length &&

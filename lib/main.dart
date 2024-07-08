@@ -9,7 +9,8 @@ void main() {
     ChangeNotifierProvider(
       create: (context) => CategoryProvider(),
     ),
-    ChangeNotifierProvider(create: (c) => CartProvider())
+    ChangeNotifierProvider(create: (c) => CartProvider()),
+    ChangeNotifierProvider(create: (c) => FavoriteProvider())
   ], child: const MainApp()));
 }
 
@@ -23,8 +24,6 @@ class MainApp extends StatelessWidget {
           ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)),
       debugShowCheckedModeBanner: false,
       home: const LoginScreen(),
-      // initialRoute: "/",
-      // onGenerateRoute: AppRoute.onGenerateRoute,  -> su dung auto route (pushName)
     );
   }
 }

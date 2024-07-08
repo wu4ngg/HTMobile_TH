@@ -1,3 +1,4 @@
+import 'package:app/app/page/admin/cate_manage.dart';
 import 'package:app/app/page/admin/product_manage.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,8 @@ class _AdminPageState extends State<AdminPage> {
         children: [
           ListTile(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (c) => const ProductManagePage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (c) => const ProductManagePage()));
             },
             leading: const Icon(Icons.phone_android_outlined),
             title: const Text("Quản lý sản phẩm"),
@@ -27,7 +29,8 @@ class _AdminPageState extends State<AdminPage> {
           ),
           ListTile(
             onTap: () {
-              
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (c) => const CategoryManage()));
             },
             leading: const Icon(Icons.category_outlined),
             title: const Text("Quản lý danh mục sản phẩm"),
