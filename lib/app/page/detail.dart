@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:app/app/page/admin/admin.dart';
 import 'package:app/app/page/auth/change_password.dart';
+import 'package:app/app/page/product/product_fav_page.dart';
 import 'package:flutter/material.dart';
 import '../model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -136,25 +137,22 @@ class _DetailState extends State<Detail> {
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: const Text("Tuỳ chọn"),
                         ),
-                        ListTile(
-                          onTap: () {},
-                          leading: const Icon(Icons.edit_outlined),
-                          title: const Text("Chỉnh sửa thông tin cá nhân"),
-                          trailing: const Icon(Icons.arrow_right),
-                        ),
+                        
                         ListTile(
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (c) => ChangePasswordScreen()));
+                                    builder: (c) => const ChangePasswordScreen()));
                           },
                           leading: const Icon(Icons.lock_outline),
                           title: const Text("Đổi mật khẩu"),
                           trailing: const Icon(Icons.arrow_right),
                         ),
                         ListTile(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (c) => const ProductFavPage()));
+                          },
                           leading: const Icon(Icons.favorite_border),
                           title: const Text("Danh sách yêu thích"),
                           trailing: const Icon(Icons.arrow_right),
@@ -172,11 +170,6 @@ class _DetailState extends State<Detail> {
                           trailing: const Icon(Icons.arrow_right),
                         ),
                         const Divider(),
-                        ListTile(
-                          leading: const Icon(Icons.code),
-                          title: const Text("Khoá JWT"),
-                          subtitle: Text(token),
-                        ),
                       ],
                     ),
                   )

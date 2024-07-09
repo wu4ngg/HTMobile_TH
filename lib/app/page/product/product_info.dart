@@ -70,9 +70,19 @@ class _ProductInfoPageState extends State<ProductInfoPage> {
                       const SizedBox(
                         width: 10,
                       ),
-                      Expanded(
-                          child: ElevatedButton.icon(
-                              onPressed: () {}, icon: Icon(Icons.favorite_border), label: const Text("Yêu thích"))),
+                      Consumer<FavoriteProvider>(
+                        builder: (context, value, child) {
+                          return Expanded(
+                              child: ElevatedButton.icon(
+                                  onPressed: () async {
+                                    if(value.isInList(widget.model)){
+                                      await value.removeFromFav(int.parse(widget.model.id ?? "-1"));
+                                    } else {
+                                      await value.addToFav(widget.model);
+                                    }
+                                  }, icon: Icon(value.isInList(widget.model) ? Icons.favorite : Icons.favorite_border), label: Text("${value.isInList(widget.model) ? "Đã " : ""}Yêu Thích")));
+                        }
+                      ),
                     ],
                   ),
                   const SizedBox(

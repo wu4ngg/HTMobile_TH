@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:app/app/config/const.dart';
 import 'package:app/app/data/api.dart';
 import 'package:app/app/page/auth/change_password.dart';
@@ -20,17 +22,26 @@ class _LoginScreenState extends State<LoginScreen> {
     //lấy token (lưu share_preference)
     showDialog(
         context: context,
-        builder: (c) => Center(child: const CircularProgressIndicator()));
+        builder: (c) => const Center(child: const CircularProgressIndicator()));
     String token = await APIRepository()
         .login(accountController.text, passwordController.text);
+    bool valid = false;
+    log(token);
     try {
       var user = await APIRepository().current(token);
-      saveUser(user, token);
+      valid = await saveUser(user, token);
     } catch (e) {
-      Navigator.pop(context);
+      log(e.toString());
     }
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const Mainpage()));
+    if (context.mounted) {
+      if (token != "") {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const Mainpage()));
+      } else {
+        Navigator.of(context, rootNavigator: true).pop();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: const Text("Đăng nhập thất bại")));
+      }
+    }
     return token;
   }
 
@@ -39,23 +50,22 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Login"),
+          title: const Text("Đăng nhập"),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: Column(children: [
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(children: [
+            Expanded(
+              child: Column(
+                children: [
                   Image.asset(
+                    height: 64,
                     urlLogo,
                     errorBuilder: (context, error, stackTrace) =>
                         const Icon(Icons.image),
                   ),
-                  const Text(
-                    "ĐĂNG NHẬP VÀO HỆ THỐNG",
-                    style: TextStyle(fontSize: 24, color: Colors.blue),
+                  SizedBox(
+                    height: 10,
                   ),
                   TextFormField(
                     controller: accountController,
@@ -83,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             future = login(context);
                           });
                         },
-                        child: const Text("Login"),
+                        child: const Text("Đăng nhập"),
                       )),
                       const SizedBox(
                         width: 16,
@@ -96,25 +106,25 @@ class _LoginScreenState extends State<LoginScreen> {
                               MaterialPageRoute(
                                   builder: (context) => const Register()));
                         },
-                        child: const Text("Register"),
+                        child: const Text("Đăng ký"),
                       ))
                     ],
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (c) => const ChangePasswordScreen(
-                                    forgetPassword: true,
-                                  )));
-                    },
-                    child: const Text("Quên mật khẩu"),
-                  ),
-                ]),
+                ],
               ),
             ),
-          ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => const ChangePasswordScreen(
+                              forgetPassword: true,
+                            )));
+              },
+              child: const Text("Quên mật khẩu"),
+            ),
+          ]),
         ));
   }
 }

@@ -98,6 +98,7 @@ class ProductItem extends StatelessWidget {
                     children: [
                       Consumer<FavoriteProvider>(
                         builder: (context, value, child) {
+                          
                           return Expanded(
                               child: ElevatedButton(
                                   onPressed: () async {

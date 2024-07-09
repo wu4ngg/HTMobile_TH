@@ -128,7 +128,7 @@ class APIRepository {
       }
     } catch (ex) {
       print(ex);
-      rethrow;
+      return "";
     }
   }
 
@@ -171,7 +171,16 @@ class APIRepository {
       rethrow;
     }
   }
-
+  Future<bool> removeBill(String id, String token) async{
+    try{
+      final body = FormData.fromMap({'billID': id});
+      Response res = await api.sendRequest.delete('/Bill/remove',
+          data: body, options: Options(headers: header(token)));
+      return res.statusCode == 200;
+    } catch (ex) {
+      return false;
+    }
+  }
   Future<bool> forgetPassword(
       String accountID, String numberID, String newPass) async {
     try {

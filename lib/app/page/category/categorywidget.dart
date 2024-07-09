@@ -58,36 +58,29 @@ class CategoryWidget extends StatelessWidget {
           onTap!(data.id ?? -1);
         }
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TweenAnimationBuilder<double>(
-              tween: Tween(
-                begin: 0,
-                end: selected ? 40 : 0
+      child: Material(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.onSurface
+          )
+        ),
+        color: selected ? Theme.of(context).colorScheme.surfaceContainer : null,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(5, 5, 20, 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              data.imageURL != null ?
+              CircleAvatar(
+                backgroundImage: NetworkImage(data.imageURL ?? ""),
+              ) : const CircleAvatar(
+                child: Icon(Icons.smartphone),
               ),
-              duration: const Duration(milliseconds: 750),
-              curve: Curves.easeInOutCubicEmphasized,
-              builder: (context, val, child) {
-                return SizedBox(  
-                  width: val,
-                  height: 2,
-                  child: Container(
-                    decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
-                  ),
-                );
-              }
-            ),
-            data.imageURL != null ?
-            CircleAvatar(
-              backgroundImage: NetworkImage(data.imageURL ?? ""),
-            ) : const CircleAvatar(
-              child: Icon(Icons.smartphone),
-            ),
-            Text(data.name)
-          ],
+              SizedBox(width: 10,),
+              Text(data.name)
+            ],
+          ),
         ),
       ),
     );

@@ -1,23 +1,17 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:app/app/data/api.dart';
-import 'package:app/app/model/category.dart';
 import 'package:app/app/model/user.dart';
 import 'package:app/app/page/admin/admin.dart';
 import 'package:app/app/page/cart.dart';
-import 'package:app/app/page/category/categorywidget.dart';
 import 'package:app/app/page/detail.dart';
+import 'package:app/app/page/product/product_fav_page.dart';
 import 'package:app/app/page/product/productwidget.dart';
 import 'package:app/app/page/purchase_history.dart';
 import 'package:app/app/provider/category_provider.dart';
 import 'package:app/app/provider/product_providers.dart';
 import 'package:app/app/provider/token_manager.dart';
-import 'package:app/app/route/page1.dart';
-import 'package:app/app/route/page2.dart';
-import 'package:app/app/route/page3.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'app/page/defaultwidget.dart';
 import 'app/data/sharepre.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,7 +23,6 @@ class Mainpage extends StatefulWidget {
 }
 
 class _MainpageState extends State<Mainpage> {
-  int _selectedCate = -1;
   late var pages = const [
     ProductPage(),
     PurchaseHistory(),
@@ -73,6 +66,11 @@ class _MainpageState extends State<Mainpage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("HL Mobile"),
+        actions: [
+          IconButton(onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (c) => const ProductFavPage()));
+          }, icon: const Icon(Icons.favorite))
+        ],
       ),
       drawer: Consumer<CategoryProvider>(builder: (context, prov, child) {
         getCate(prov);
@@ -132,29 +130,7 @@ class _MainpageState extends State<Mainpage> {
                   _selectedIndex = 2;
                   setState(() {});
                 },
-              ),
-              const Divider(),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Text("Danh mục sản phẩm"),
-              ),
-              prov.lst.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
-                  : SizedBox(),
-              ...prov.lst.map((e) => ListTile(
-                    onTap: () {
-                      Navigator.pop(context);
-                      setState(() {
-                        _selectedIndex = 0;
-                      });
-                      prov.currentIndex =
-                          prov.lst.indexWhere((e2) => e2.id == e.id);
-                    },
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(e.imageURL!),
-                    ),
-                    title: Text(e.name),
-                  )),
+              ),              
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.admin_panel_settings_outlined),
@@ -164,11 +140,6 @@ class _MainpageState extends State<Mainpage> {
                 },
               ),
               const Divider(),
-              ListTile(
-                leading: const Icon(Icons.settings_outlined),
-                title: const Text('Cài đặt'),
-                onTap: () {},
-              ),
               user.accountId == ''
                   ? const SizedBox()
                   : ListTile(

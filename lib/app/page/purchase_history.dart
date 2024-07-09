@@ -17,8 +17,10 @@ class _PurchaseHistoryState extends State<PurchaseHistory> {
   List<PurchaseHistoryModel> lst = [];
   APIRepository repo = APIRepository();
   Future<void>? future;
+  String? token;
   getData() async {
-    lst = await repo.getPurchaseHistory(await TokenManager.getToken());
+    token = await TokenManager.getToken();
+    lst = await repo.getPurchaseHistory(token ?? "");
   }
 
   @override
@@ -39,7 +41,15 @@ class _PurchaseHistoryState extends State<PurchaseHistory> {
           }
           return ListView.builder(
             itemCount: lst.length,
-            itemBuilder: (context, index) => PurchaseItem(model: lst[index]),
+            itemBuilder: (context, index) => PurchaseItem(
+              model: lst[index],
+              onDelete: () async {
+                await repo.removeBill(lst[index].id ?? "", token ?? "");
+                setState(() {
+                  lst.removeAt(index);
+                });
+              },
+            ),
           );
         });
   }

@@ -83,5 +83,10 @@ class DatabaseHelper{
       lst.add(ProductModel.fromJson(element));
     }
     return lst;
+  } 
+  Future<void> startOver() async{
+    Database db = await database;
+    await db.delete("cart");
+    await db.delete("favorite");
   }
 }

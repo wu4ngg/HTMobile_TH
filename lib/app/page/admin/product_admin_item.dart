@@ -72,11 +72,12 @@ class _ProductAdminItemState extends State<ProductAdminItem> {
                           ],
                         ),
                       ),
+                      widget.onEdit != null ?
                       IconButton(
                           onPressed: widget.onEdit != null ? () {
                             widget.onEdit!(widget.model);
                           } : null,
-                          icon: const Icon(Icons.edit_outlined)),
+                          icon: const Icon(Icons.edit_outlined)) : const SizedBox(),
                       IconButton(
                           onPressed: widget.onDelete,
                           icon: const Icon(Icons.delete_outline))

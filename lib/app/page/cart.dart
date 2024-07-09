@@ -34,9 +34,10 @@ class _CartPageState extends State<CartPage> {
         await TokenManager.getToken());
     if (valid) {
       for (var element in selectList) {
-        await value.removeFromCart(element);
-        await value.revalidateCart(false);
+        value.removeFromCart(element);
       }
+        await value.revalidateCart(false);
+      selectList.clear();
       setState(() {});
     } else {}
   }
